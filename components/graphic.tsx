@@ -2,56 +2,60 @@
 import {motion,useReducedMotion} from 'framer-motion';
 import type {Locale} from '@/lib/data';
 
-/** Illustrative Search Console–style curve (normalized 0–100). */
-const clicksPath='M0,92 C18,90 28,88 40,78 C55,64 62,52 74,34 C86,16 94,10 100,6';
-const imprPath='M0,96 C20,93 32,86 46,70 C60,52 70,38 82,22 C92,10 97,6 100,4';
-
 const copy={
   en:{
-    kicker:'Search Console + AI',
-    live:'Illustrative sample',
-    title:'Organic growth that compounds',
-    note:'Demo metrics inspired by Search Console — not a live client account.',
-    cards:[
-      {key:'clicks',label:'Total clicks',value:'8.4k',tone:'clicks'},
-      {key:'impr',label:'Total impressions',value:'412k',tone:'impr'},
-      {key:'ctr',label:'Avg. CTR',value:'2.0%',tone:'ctr'},
-      {key:'pos',label:'Avg. position',value:'9.2',tone:'pos'},
+    kicker:'Search Console · illustrative',
+    live:'Growth path',
+    title:'Organic traffic that compounds',
+    note:'More impressions → more clicks → more people finding you in search and AI.',
+    metrics:[
+      {key:'clicks',label:'Total clicks',value:'8.4k',delta:'+312%',on:true,tone:'blue'},
+      {key:'impr',label:'Impressions',value:'412k',delta:'+907%',on:true,tone:'violet'},
+      {key:'ctr',label:'Avg. CTR',value:'2.0%',delta:'+0.7pp',on:false,tone:'neutral'},
+      {key:'pos',label:'Avg. position',value:'9.2',delta:'↑ better',on:false,tone:'neutral'},
     ],
-    chartLabel:'Clicks & impressions over 12 months',
-    aiTitle:'AI answer presence',
-    aiRows:[
-      {engine:'ChatGPT',score:71},
-      {engine:'Gemini',score:64},
-      {engine:'Answer engines',score:58},
-    ],
-    revenue:'Projected path → more visits → more pipeline → more revenue'
+    chartLabel:'Daily performance',
+    footer:'Illustrative curve based on Search Console-style growth — not a live account.',
+    outcome:'Outcome',
+    revenue:'More visitors. More AI mentions. More revenue.'
   },
   pt:{
-    kicker:'Search Console + IA',
-    live:'Amostra ilustrativa',
-    title:'Crescimento orgânico que acelera',
-    note:'Métricas de demonstração no estilo Search Console — não são de uma conta real.',
-    cards:[
-      {key:'clicks',label:'Total de cliques',value:'8,4 mil',tone:'clicks'},
-      {key:'impr',label:'Total de impressões',value:'412 mil',tone:'impr'},
-      {key:'ctr',label:'CTR média',value:'2,0%',tone:'ctr'},
-      {key:'pos',label:'Posição média',value:'9,2',tone:'pos'},
+    kicker:'Search Console · ilustrativo',
+    live:'Crescimento',
+    title:'Tráfego orgânico que cresce',
+    note:'Mais impressões → mais cliques → mais gente te encontrando na busca e nas IAs.',
+    metrics:[
+      {key:'clicks',label:'Total de cliques',value:'8,4 mil',delta:'+312%',on:true,tone:'blue'},
+      {key:'impr',label:'Impressões',value:'412 mil',delta:'+907%',on:true,tone:'violet'},
+      {key:'ctr',label:'CTR média',value:'2,0%',delta:'+0,7pp',on:false,tone:'neutral'},
+      {key:'pos',label:'Posição média',value:'9,2',delta:'↑ melhor',on:false,tone:'neutral'},
     ],
-    chartLabel:'Cliques e impressões em 12 meses',
-    aiTitle:'Presença em respostas de IA',
-    aiRows:[
-      {engine:'ChatGPT',score:71},
-      {engine:'Gemini',score:64},
-      {engine:'Motores de resposta',score:58},
-    ],
-    revenue:'Caminho projetado → mais visitas → mais pipeline → mais faturamento'
+    chartLabel:'Desempenho diário',
+    footer:'Curva ilustrativa no estilo Search Console — não é conta ao vivo.',
+    outcome:'Resultado',
+    revenue:'Mais visitas. Mais menções em IA. Mais faturamento.'
   }
 };
+
+/* Smooth upward path for SVG polyline (normalized 0–100) */
+const clicks=[8,10,12,14,18,22,28,34,42,55,68,82,95];
+const impre=[12,15,18,22,28,35,44,52,62,74,86,94,100];
+
+function toPoints(values:number[],w:320,h:110,pad=8){
+  const step=(w-pad*2)/(values.length-1);
+  return values.map((v,i)=>{
+    const x=pad+i*step;
+    const y=h-pad-((v/100)*(h-pad*2));
+    return `${x},${y}`;
+  }).join(' ');
+}
 
 export default function Graphic({locale='en'}:{locale?:Locale}){
   const reduce=useReducedMotion();
   const t=copy[locale]||copy.en;
+  const w=320,h=110;
+  const clickPts=toPoints(clicks,w,h);
+  const imprPts=toPoints(impre,w,h);
 
   return (
     <div className="graphic" aria-label={t.title}>
@@ -61,16 +65,16 @@ export default function Graphic({locale='en'}:{locale?:Locale}){
         <span className="orbit orbit-c"/>
         <motion.span
           className="field-glow"
-          animate={reduce?undefined:{scale:[1,1.06,1],opacity:[.5,.82,.5]}}
+          animate={reduce?undefined:{scale:[1,1.08,1],opacity:[.55,.85,.55]}}
           transition={{duration:8,repeat:Infinity,ease:'easeInOut'}}
         />
       </div>
 
       <motion.div
-        className="signal-stage gsc-stage"
-        initial={reduce?false:{opacity:0,y:24,scale:.98}}
+        className="signal-stage console-stage"
+        initial={reduce?false:{opacity:0,y:28,scale:.97}}
         animate={{opacity:1,y:0,scale:1}}
-        transition={{duration:.85,ease:[.22,1,.36,1]}}
+        transition={{duration:.9,ease:[.22,1,.36,1]}}
       >
         <div className="stage-top">
           <span className="stage-kicker">{t.kicker}</span>
@@ -79,84 +83,75 @@ export default function Graphic({locale='en'}:{locale?:Locale}){
         <h3 className="stage-title">{t.title}</h3>
         <p className="stage-note">{t.note}</p>
 
-        <div className="gsc-cards">
-          {t.cards.map((card,i)=>(
+        <div className="console-metrics">
+          {t.metrics.map((m,i)=>(
             <motion.div
-              key={card.key}
-              className={`gsc-card gsc-${card.tone}`}
+              key={m.key}
+              className={`console-metric tone-${m.tone}${m.on?' is-on':''}`}
               initial={reduce?false:{opacity:0,y:10}}
               animate={{opacity:1,y:0}}
-              transition={{delay:.2+i*.06,duration:.45}}
+              transition={{delay:.25+i*.08,duration:.45}}
             >
-              <span>{card.label}</span>
-              <strong>{card.value}</strong>
+              <span className="metric-check" aria-hidden>{m.on?'✓':''}</span>
+              <span className="metric-label">{m.label}</span>
+              <strong className="metric-value">{m.value}</strong>
+              <em className="metric-delta">{m.delta}</em>
             </motion.div>
           ))}
         </div>
 
-        <div className="gsc-chart" aria-hidden>
-          <div className="gsc-chart-label">{t.chartLabel}</div>
-          <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="gsc-svg">
+        <div className="console-chart">
+          <div className="chart-head">
+            <span>{t.chartLabel}</span>
+            <span className="chart-legend">
+              <i className="leg-clicks"/> Cliques
+              <i className="leg-impr"/> Impressões
+            </span>
+          </div>
+          <svg viewBox={`0 0 ${w} ${h}`} className="growth-svg" role="img" aria-hidden>
             <defs>
-              <linearGradient id="imprFill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="rgba(191,123,84,.35)"/>
-                <stop offset="100%" stopColor="rgba(191,123,84,0)"/>
+              <linearGradient id="fillClicks" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#2f82ff" stopOpacity=".35"/>
+                <stop offset="100%" stopColor="#2f82ff" stopOpacity="0"/>
               </linearGradient>
-              <linearGradient id="clickFill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="rgba(47,130,255,.35)"/>
-                <stop offset="100%" stopColor="rgba(47,130,255,0)"/>
+              <linearGradient id="fillImpr" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#bf7b54" stopOpacity=".32"/>
+                <stop offset="100%" stopColor="#bf7b54" stopOpacity="0"/>
               </linearGradient>
             </defs>
-            <path d={`${imprPath} L100,100 L0,100 Z`} fill="url(#imprFill)"/>
-            <path d={`${clicksPath} L100,100 L0,100 Z`} fill="url(#clickFill)"/>
-            <motion.path
-              d={imprPath}
+            {[0.25,0.5,0.75].map(p=>(
+              <line key={p} x1="8" x2={w-8} y1={8+(h-16)*p} y2={8+(h-16)*p} className="chart-grid"/>
+            ))}
+            <motion.polyline
               fill="none"
               stroke="#bf7b54"
-              strokeWidth="2.2"
-              vectorEffect="non-scaling-stroke"
-              initial={reduce?false:{pathLength:0}}
-              animate={{pathLength:1}}
-              transition={{duration:1.4,ease:'easeOut'}}
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              points={imprPts}
+              initial={reduce?false:{pathLength:0,opacity:0}}
+              animate={{pathLength:1,opacity:1}}
+              transition={{duration:1.4,delay:.4,ease:'easeOut'}}
             />
-            <motion.path
-              d={clicksPath}
+            <motion.polyline
               fill="none"
               stroke="#2f82ff"
-              strokeWidth="2.4"
-              vectorEffect="non-scaling-stroke"
-              initial={reduce?false:{pathLength:0}}
-              animate={{pathLength:1}}
-              transition={{duration:1.4,delay:.15,ease:'easeOut'}}
+              strokeWidth="2.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              points={clickPts}
+              initial={reduce?false:{pathLength:0,opacity:0}}
+              animate={{pathLength:1,opacity:1}}
+              transition={{duration:1.4,delay:.55,ease:'easeOut'}}
             />
           </svg>
-          <div className="gsc-legend">
-            <span><i className="leg-clicks"/> {locale==='pt'?'Cliques':'Clicks'}</span>
-            <span><i className="leg-impr"/> {locale==='pt'?'Impressões':'Impressions'}</span>
-          </div>
+          <p className="chart-foot">{t.footer}</p>
         </div>
 
-        <div className="gsc-ai">
-          <div className="gsc-ai-title">{t.aiTitle}</div>
-          <ul className="stage-rows gsc-ai-rows">
-            {t.aiRows.map((row,i)=>(
-              <li key={row.engine}>
-                <div className="row-label">{row.engine}</div>
-                <div className="row-meter" aria-hidden>
-                  <motion.span
-                    className="fill fill-seo"
-                    initial={reduce?false:{width:0}}
-                    animate={{width:`${row.score}%`}}
-                    transition={{delay:.7+i*.1,duration:.8,ease:[.22,1,.36,1]}}
-                  />
-                </div>
-                <strong>{row.score}%</strong>
-              </li>
-            ))}
-          </ul>
+        <div className="console-outcome">
+          <span>{t.outcome}</span>
+          <strong>{t.revenue}</strong>
         </div>
-
-        <p className="gsc-revenue">{t.revenue}</p>
       </motion.div>
     </div>
   );

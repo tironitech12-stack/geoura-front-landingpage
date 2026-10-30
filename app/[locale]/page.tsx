@@ -2,10 +2,10 @@ import Link from 'next/link';
 import Navigation from '@/components/navigation';
 import Footer from '@/components/footer';
 import Graphic from '@/components/graphic';
-import ResultsCta from '@/components/results-cta';
+import GrowthProjection from '@/components/growth-projection';
 import {Reveal} from '@/components/reveal';
 import {copy,entries,articleHref,getLanguage,baseUrl} from '@/lib/data';
-import {ArrowRight,ArrowUpRight,MoveUpRight,Search,Atom,MessageSquareMore,ChartNoAxesCombined} from 'lucide-react';
+import {ArrowRight,ArrowUpRight,MoveUpRight,Search,Atom,MessageSquareMore} from 'lucide-react';
 import type {Metadata} from 'next';
 
 export async function generateMetadata({params}:{params:Promise<{locale:string}>}):Promise<Metadata>{
@@ -90,8 +90,8 @@ export default async function Home({params}:{params:Promise<{locale:string}>}){
               <span>Answer engines</span>
             </div>
             <div className="hero-actions">
-              <a className="btn btn-solid btn-cta-pop" href="mailto:hello@geoaura.com?subject=GeoAura%20-%20mais%20resultado%20organico">{d.cta}<ArrowUpRight size={19}/></a>
-              <a className="btn btn-ghost" href="#resultados">{d.secondary}<ArrowRight size={18}/></a>
+              <Link className="btn btn-solid" href={`/${locale}/plataforma`}>{d.cta}<ArrowUpRight size={19}/></Link>
+              <Link className="btn btn-ghost" href={`/${locale}/artigos`}>{d.secondary}<ArrowRight size={18}/></Link>
             </div>
           </div>
           <Graphic locale={locale}/>
@@ -100,14 +100,11 @@ export default async function Home({params}:{params:Promise<{locale:string}>}){
 
       <section className="marquee-bar">
         <div className="wrap marquee-inner">
-          <span>{locale==='pt'?'MAIS CLIQUES':'MORE CLICKS'}</span><span>✳</span>
-          <span>{locale==='pt'?'MAIS IMPRESSÕES':'MORE IMPRESSIONS'}</span><span>✳</span>
-          <span>{locale==='pt'?'MAIS MENÇÕES EM IA':'MORE AI MENTIONS'}</span><span>✳</span>
-          <span>{locale==='pt'?'MAIS FATURAMENTO':'MORE REVENUE'}</span>
+          {locale==='pt'
+            ?<><span>MAIS CLIQUES</span><span>✳</span><span>MAIS IMPRESSÕES</span><span>✳</span><span>MAIS MENÇÕES EM IA</span><span>✳</span><span>MAIS FATURAMENTO</span></>
+            :<><span>MORE CLICKS</span><span>✳</span><span>MORE IMPRESSIONS</span><span>✳</span><span>MORE AI MENTIONS</span><span>✳</span><span>MORE REVENUE</span></>}
         </div>
       </section>
-
-      <ResultsCta locale={locale}/>
 
       <section className="section wrap method" id="method">
         <Reveal>
@@ -144,25 +141,7 @@ export default async function Home({params}:{params:Promise<{locale:string}>}){
         </div>
       </section>
 
-      <section className="dark-panel">
-        <div className="wrap dark-grid">
-          <Reveal>
-            <span className="eyebrow">02 / BUILT FOR CLARITY</span>
-            <h2>{locale==='pt'?'Visibilidade sem clareza é só ruído':'Visibility without clarity is just noise'}<span className="mint">.</span></h2>
-          </Reveal>
-          <Reveal delay={.15}>
-            <p>{locale==='pt'
-              ?'Rankings não contam a história toda. A GeoAura é desenhada em torno de descoberta baseada em evidência: o que as pessoas perguntam, onde as marcas aparecem e o que priorizar.'
-              :'Rankings don\'t tell the whole story. GeoAura is designed around evidence-led discovery: what people ask, where brands appear, what to improve, and how that connects to outcomes.'}</p>
-            <Link href={`/${locale}/plataforma`} className="text-link">Explore the approach <ArrowUpRight size={17}/></Link>
-            <div className="dark-metrics">
-              <span><ChartNoAxesCombined size={22}/> Understand demand</span>
-              <span><Search size={22}/> See the gaps</span>
-              <span><ArrowUpRight size={22}/> Prioritize action</span>
-            </div>
-          </Reveal>
-        </div>
-      </section>
+      <GrowthProjection locale={locale}/>
 
       <section className="section wrap journal-preview">
         <div className="split-title">
@@ -191,14 +170,24 @@ export default async function Home({params}:{params:Promise<{locale:string}>}){
         </div>
       </section>
 
-      <section className="cta-section wrap">
+      <section className="cta-section wrap cta-punch">
         <div className="cta-content">
-          <span className="eyebrow">THE NEXT ERA OF DISCOVERY</span>
-          <h2>{locale==='pt'?<>Torne sua marca<br/>impossível de <em>ignorar.</em></>:<>Make your brand<br/>impossible to <em>overlook.</em></>}</h2>
+          <span className="eyebrow">{locale==='pt'?'PRÓXIMO PASSO':'NEXT STEP'}</span>
+          <h2>{d.ctaFinal}</h2>
           <p>{locale==='pt'
-            ?'Melhores insights. Decisões mais claras. Uma estratégia orgânica mais durável.'
-            :'Better insights. Clearer decisions. A more durable organic growth strategy.'}</p>
-          <a href="mailto:hello@geoaura.com?subject=GeoAura%20early%20access" className="btn btn-light">{d.pricing}<ArrowUpRight size={18}/></a>
+            ?'Mais gente no Google. Mais presença nas IAs. Mais oportunidades de venda — comece agora.'
+            :'More people from Google. More presence in AI answers. More sales opportunities — start now.'}</p>
+          <a
+            href={`mailto:hello@geoaura.com?subject=${encodeURIComponent(locale==='pt'?'Quero mais resultado orgânico':'I want more organic results')}`}
+            className="btn btn-light btn-pulse"
+          >
+            {d.ctaFinalBtn}<ArrowUpRight size={18}/>
+          </a>
+          <div className="cta-proof-row">
+            <span>{locale==='pt'?'+ tráfego orgânico':'+ organic traffic'}</span>
+            <span>{locale==='pt'?'+ menções em IA':'+ AI mentions'}</span>
+            <span>{locale==='pt'?'+ faturamento':'+ revenue'}</span>
+          </div>
         </div>
         <div className="cta-orb"/>
       </section>
