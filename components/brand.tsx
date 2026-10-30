@@ -20,9 +20,9 @@ function LogoMark({light=false}:{light?:boolean}){
 
 export default function Brand({locale='en',light=false}:{locale?:string,light?:boolean}){
   return (
-    <Link href={`/${locale}`} aria-label="GeoAura home" className={'brand '+(light?'bright':'')}>
+    <Link href={`/${locale}`} aria-label="GEOura home" className={'brand '+(light?'bright':'')}>
       <LogoMark light={light}/>
-      <span className="brand-word">GEO<span className="brand-accent">AURA</span></span>
+      <span className="brand-word">GEO<span className="brand-accent">URA</span></span>
     </Link>
   );
 }

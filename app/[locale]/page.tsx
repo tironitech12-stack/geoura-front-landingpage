@@ -11,8 +11,8 @@ import type {Metadata} from 'next';
 export async function generateMetadata({params}:{params:Promise<{locale:string}>}):Promise<Metadata>{
   const locale=getLanguage((await params).locale);
   const title=locale==='pt'
-    ?'GeoAura — Visibilidade em busca e respostas de IA'
-    :'GeoAura — AI search visibility across SEO, GEO & AEO';
+    ?'GEOura — Visibilidade em busca e respostas de IA'
+    :'GEOura — AI search visibility across SEO, GEO & AEO';
   const description=locale==='pt'
     ?'Entenda como sua marca aparece em buscas, ChatGPT, Gemini e motores de resposta. Inteligência orgânica para SEO, GEO e AEO.'
     :'See how your brand appears in search, ChatGPT, Gemini and answer engines. Organic discovery intelligence for SEO, GEO and AEO.';
@@ -41,14 +41,14 @@ export default async function Home({params}:{params:Promise<{locale:string}>}){
     '@graph':[
       {
         '@type':'Organization',
-        name:'GeoAura',
+        name:'GEOura',
         url:baseUrl,
         description:'Organic discovery intelligence across SEO, GEO and AEO.',
-        email:'hello@geoaura.com'
+        email:'hello@geoura.com'
       },
       {
         '@type':'WebSite',
-        name:'GeoAura',
+        name:'GEOura',
         url:baseUrl,
         inLanguage:locale==='pt'?['pt-BR','en']:['en','pt-BR'],
         potentialAction:{
@@ -59,7 +59,7 @@ export default async function Home({params}:{params:Promise<{locale:string}>}){
       },
       {
         '@type':'SoftwareApplication',
-        name:'GeoAura',
+        name:'GEOura',
         applicationCategory:'BusinessApplication',
         operatingSystem:'Web',
         description:d.heroText,
@@ -79,7 +79,7 @@ export default async function Home({params}:{params:Promise<{locale:string}>}){
         </div>
         <div className="wrap hero">
           <div className="hero-copy">
-            <p className="hero-brand">GeoAura</p>
+            <p className="hero-brand">GEOURA</p>
             <div className="eyebrow"><span className="eyebrow-square"/>{d.heroTop}</div>
             <h1>{d.heroA}<br/><em>{d.heroB}</em></h1>
             <p className="hero-intro">{d.heroText}</p>
@@ -178,7 +178,7 @@ export default async function Home({params}:{params:Promise<{locale:string}>}){
             ?'Mais gente no Google. Mais presença nas IAs. Mais oportunidades de venda — comece agora.'
             :'More people from Google. More presence in AI answers. More sales opportunities — start now.'}</p>
           <a
-            href={`mailto:hello@geoaura.com?subject=${encodeURIComponent(locale==='pt'?'Quero mais resultado orgânico':'I want more organic results')}`}
+            href={`mailto:hello@geoura.com?subject=${encodeURIComponent(locale==='pt'?'Quero mais resultado orgânico':'I want more organic results')}`}
             className="btn btn-light btn-pulse"
           >
             {d.ctaFinalBtn}<ArrowUpRight size={18}/>

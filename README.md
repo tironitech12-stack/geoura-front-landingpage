@@ -1,4 +1,4 @@
-# GeoAura — Organic Discovery Intelligence
+# GEOura — Organic Discovery Intelligence
 
 Premium bilingual Next.js 15/React 19 site and editorial research system for SEO, GEO, and AEO.
 
@@ -10,7 +10,7 @@ npm run dev
 # http://localhost:3000/en
 ```
 
-Configure `NEXT_PUBLIC_SITE_URL=https://your-actual-domain.com` in `.env.local` before production deployment. The initial canonical domain is illustrative. Update the contact address `hello@geoaura.com` to an address you control.
+Configure `NEXT_PUBLIC_SITE_URL=https://your-actual-domain.com` in `.env.local` before production deployment. The initial canonical domain is illustrative. Update the contact address `hello@geoura.com` to an address you control.
 
 ## Included
 
