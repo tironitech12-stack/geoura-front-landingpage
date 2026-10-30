@@ -1,0 +1,2 @@
+import type {MetadataRoute} from 'next';import {baseUrl,entries,publishedSlugs} from '@/lib/data';
+export default function sitemap():MetadataRoute.Sitemap{const staticPaths=['','/artigos','/plataforma'];const urls:MetadataRoute.Sitemap=[];for(const locale of ['en','pt']){for(const p of staticPaths)urls.push({url:`${baseUrl}/${locale}${p}`,changeFrequency:'weekly',priority:p?0.7:1});for(const t of entries.filter(t=>publishedSlugs.has(t.slug)))urls.push({url:`${baseUrl}/${locale}/artigos/${t.slug}`,changeFrequency:'monthly',priority:.75})}return urls;}
