@@ -361,6 +361,10 @@ h1,h2,h3,p{margin-top:0}
 .library-header h1,.platform-hero h1{font:650 clamp(56px,6.5vw,100px)/1.08 'Manrope',sans-serif;letter-spacing:-5px;margin:22px 0}
 .library-header p,.platform-hero p{font-size:18px;line-height:1.75;color:var(--muted);max-width:670px}
 .lib-stats{display:flex;gap:32px;font-size:11px;font-weight:800;letter-spacing:1.5px;color:#4f6356;margin-top:36px}
+.published-index{margin-top:48px;padding:24px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.published-index ul{list-style:none;padding:0;margin:14px 0 0;display:flex;flex-wrap:wrap;gap:12px 28px}
+.published-index a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+.published-index a:hover{color:var(--ink)}
 .explorer{margin-top:90px}
 .explorer-bar,.second-filter{display:flex;align-items:center;justify-content:space-between;gap:20px}
 .search-field{display:flex;align-items:center;gap:14px;padding:16px 18px;background:#fff;border:1px solid var(--line);flex:1;max-width:650px}
@@ -381,8 +385,9 @@ h1,h2,h3,p{margin-top:0}
 .row-main strong{font:650 17px 'Manrope',sans-serif;text-transform:capitalize;letter-spacing:-.3px}
 .row-main small{font-size:11px;color:#66756c}
 .pagination{display:flex;align-items:center;justify-content:space-between;margin-top:28px;color:#5a6a60;font-size:12px}
-.pagination button{display:flex;align-items:center;gap:8px;background:none;border:1px solid var(--line);padding:11px}
+.pagination button,.pagination-link{display:flex;align-items:center;gap:8px;background:none;border:1px solid var(--line);padding:11px;color:inherit;text-decoration:none}
 .pagination button:disabled{opacity:.3;cursor:not-allowed}
+.pagination-link:hover{background:rgba(214,230,205,.45)}
 
 .post-wrap{max-width:900px;padding-top:70px}
 .back-link{font-size:12px;color:#55665b;display:inline-flex;gap:9px;align-items:center}

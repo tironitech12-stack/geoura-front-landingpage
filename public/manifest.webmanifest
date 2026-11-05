@@ -1,1 +1,17 @@
-{"name":"GeoAura","short_name":"GeoAura","description":"Organic discovery intelligence","display":"standalone","start_url":"/en","background_color":"#f4f2eb","theme_color":"#111b18"}
+{
+  "name": "GEOura",
+  "short_name": "GEOura",
+  "description": "Organic discovery intelligence across SEO, GEO and AEO",
+  "display": "standalone",
+  "start_url": "/en",
+  "background_color": "#f4f2eb",
+  "theme_color": "#111b18",
+  "icons": [
+    {
+      "src": "/icon",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

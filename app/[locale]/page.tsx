@@ -5,6 +5,7 @@ import Graphic from '@/components/graphic';
 import GrowthProjection from '@/components/growth-projection';
 import {Reveal} from '@/components/reveal';
 import {copy,entries,articleHref,getLanguage,baseUrl} from '@/lib/data';
+import {languageAlternates,absoluteUrl,defaultOgImage,organizationJsonLd,htmlLang} from '@/lib/seo';
 import {ArrowRight,ArrowUpRight,MoveUpRight,Search,Atom,MessageSquareMore} from 'lucide-react';
 import type {Metadata} from 'next';
 
@@ -21,9 +22,16 @@ export async function generateMetadata({params}:{params:Promise<{locale:string}>
     description,
     alternates:{
       canonical:`/${locale}`,
-      languages:{en:'/en','pt-BR':'/pt'}
+      languages:languageAlternates('')
     },
-    openGraph:{title,description,url:`${baseUrl}/${locale}`,type:'website'}
+    openGraph:{
+      title,
+      description,
+      url:absoluteUrl(`/${locale}`),
+      type:'website',
+      locale:locale==='pt'?'pt_BR':'en_US',
+      images:[defaultOgImage()]
+    }
   };
 }
 
@@ -39,21 +47,19 @@ export default async function Home({params}:{params:Promise<{locale:string}>}){
   const jsonLd={
     '@context':'https://schema.org',
     '@graph':[
-      {
-        '@type':'Organization',
-        name:'GEOura',
-        url:baseUrl,
-        description:'Organic discovery intelligence across SEO, GEO and AEO.',
-        email:'hello@geoura.com'
-      },
+      organizationJsonLd(),
       {
         '@type':'WebSite',
         name:'GEOura',
         url:baseUrl,
-        inLanguage:locale==='pt'?['pt-BR','en']:['en','pt-BR'],
+        inLanguage:htmlLang(locale),
+        publisher:{'@id':`${baseUrl}/#organization`},
         potentialAction:{
           '@type':'SearchAction',
-          target:`${baseUrl}/${locale}/artigos?q={search_term_string}`,
+          target:{
+            '@type':'EntryPoint',
+            urlTemplate:`${baseUrl}/${locale}/artigos?q={search_term_string}`
+          },
           'query-input':'required name=search_term_string'
         }
       },
