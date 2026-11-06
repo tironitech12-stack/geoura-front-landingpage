@@ -4,9 +4,13 @@ import Footer from '@/components/footer';
 import Graphic from '@/components/graphic';
 import GrowthProjection from '@/components/growth-projection';
 import {Reveal} from '@/components/reveal';
-import {copy,entries,articleHref,getLanguage,baseUrl} from '@/lib/data';
+import DomainCapture from '@/components/landing/domain-capture';
+import FaqSection from '@/components/landing/faq';
+import AnalyticsBeacon from '@/components/landing/analytics-beacon';
+import {getLanguage,baseUrl} from '@/lib/data';
+import {tLanding} from '@/lib/landing-copy';
 import {languageAlternates,absoluteUrl,defaultOgImage,organizationJsonLd,htmlLang} from '@/lib/seo';
-import {ArrowRight,ArrowUpRight,MoveUpRight,Search,Atom,MessageSquareMore} from 'lucide-react';
+import {ArrowRight,ArrowUpRight,Search,Atom,MessageSquareMore} from 'lucide-react';
 import type {Metadata} from 'next';
 
 export async function generateMetadata({params}:{params:Promise<{locale:string}>}):Promise<Metadata>{
@@ -15,15 +19,12 @@ export async function generateMetadata({params}:{params:Promise<{locale:string}>
     ?'GEOura — Visibilidade em busca e respostas de IA'
     :'GEOura — AI search visibility across SEO, GEO & AEO';
   const description=locale==='pt'
-    ?'Entenda como sua marca aparece em buscas, ChatGPT, Gemini e motores de resposta. Inteligência orgânica para SEO, GEO e AEO.'
-    :'See how your brand appears in search, ChatGPT, Gemini and answer engines. Organic discovery intelligence for SEO, GEO and AEO.';
+    ?'Entenda como sua marca aparece no Google e em buscas com IA. Descubra oportunidades, priorize melhorias e cresça demanda orgânica — sem depender só de anúncios.'
+    :'Understand how visible your business is across Google and AI-powered search. Discover opportunities, prioritize improvements, and grow organic demand.';
   return {
     title:{absolute:title},
     description,
-    alternates:{
-      canonical:`/${locale}`,
-      languages:languageAlternates('')
-    },
+    alternates:{canonical:`/${locale}`,languages:languageAlternates('')},
     openGraph:{
       title,
       description,
@@ -37,12 +38,7 @@ export async function generateMetadata({params}:{params:Promise<{locale:string}>
 
 export default async function Home({params}:{params:Promise<{locale:string}>}){
   const locale=getLanguage((await params).locale);
-  const d=copy[locale];
-  const featured=[
-    entries.find(e=>e.query==='generative engine optimization'),
-    entries.find(e=>e.query==='answer engine optimization'),
-    entries.find(e=>e.query==='search engine optimization')
-  ].filter(Boolean) as typeof entries;
+  const L=tLanding(locale);
 
   const jsonLd={
     '@context':'https://schema.org',
@@ -56,10 +52,7 @@ export default async function Home({params}:{params:Promise<{locale:string}>}){
         publisher:{'@id':`${baseUrl}/#organization`},
         potentialAction:{
           '@type':'SearchAction',
-          target:{
-            '@type':'EntryPoint',
-            urlTemplate:`${baseUrl}/${locale}/artigos?q={search_term_string}`
-          },
+          target:{'@type':'EntryPoint',urlTemplate:`${baseUrl}/${locale}/artigos?q={search_term_string}`},
           'query-input':'required name=search_term_string'
         }
       },
@@ -68,137 +61,160 @@ export default async function Home({params}:{params:Promise<{locale:string}>}){
         name:'GEOura',
         applicationCategory:'BusinessApplication',
         operatingSystem:'Web',
-        description:d.heroText,
-        offers:{'@type':'Offer',price:'0',priceCurrency:'USD',availability:'https://schema.org/PreOrder'}
+        description:L.hero.sub,
+        offers:{
+          '@type':'Offer',
+          price:'0',
+          priceCurrency:'USD',
+          availability:'https://schema.org/PreOrder',
+          description:'Early access waitlist — analysis features in development'
+        }
       }
     ]
   };
 
-  return <>
-    <Navigation locale={locale}/>
-    <main>
-      <section className="hero-stage">
-        <div className="hero-atmosphere" aria-hidden>
-          <span className="atm atm-a"/>
-          <span className="atm atm-b"/>
-          <span className="atm atm-c"/>
-        </div>
-        <div className="wrap hero">
-          <div className="hero-copy">
-            <p className="hero-brand">GEOURA</p>
-            <div className="eyebrow"><span className="eyebrow-square"/>{d.heroTop}</div>
-            <h1>{d.heroA}<br/><em>{d.heroB}</em></h1>
-            <p className="hero-intro">{d.heroText}</p>
-            <div className="hero-engines" aria-label="Discovery surfaces">
-              <span>Search</span>
-              <span>ChatGPT</span>
-              <span>Gemini</span>
-              <span>Answer engines</span>
-            </div>
-            <div className="hero-actions">
-              <Link className="btn btn-solid" href={`/${locale}/plataforma`}>{d.cta}<ArrowUpRight size={19}/></Link>
-              <Link className="btn btn-ghost" href={`/${locale}/artigos`}>{d.secondary}<ArrowRight size={18}/></Link>
-            </div>
+  return (
+    <>
+      <AnalyticsBeacon page="home"/>
+      <Navigation locale={locale}/>
+      <main>
+        <section className="hero-stage">
+          <div className="hero-atmosphere" aria-hidden>
+            <span className="atm atm-a"/><span className="atm atm-b"/><span className="atm atm-c"/>
           </div>
-          <Graphic locale={locale}/>
-        </div>
-      </section>
-
-      <section className="marquee-bar">
-        <div className="wrap marquee-inner">
-          {locale==='pt'
-            ?<><span>MAIS CLIQUES</span><span>✳</span><span>MAIS IMPRESSÕES</span><span>✳</span><span>MAIS MENÇÕES EM IA</span><span>✳</span><span>MAIS FATURAMENTO</span></>
-            :<><span>MORE CLICKS</span><span>✳</span><span>MORE IMPRESSIONS</span><span>✳</span><span>MORE AI MENTIONS</span><span>✳</span><span>MORE REVENUE</span></>}
-        </div>
-      </section>
-
-      <section className="section wrap method" id="method">
-        <Reveal>
-          <div className="section-head">
-            <span className="eyebrow">01 / {d.preview}</span>
-            <h2>{d.features}</h2>
-            <p>{locale==='pt'
-              ?'Busca tradicional, respostas generativas e motores de resposta formam um só mapa de descoberta. Entenda os três.'
-              :'Traditional search, generative answers, and answer engines are one connected discovery landscape. Understand all three.'}</p>
-          </div>
-        </Reveal>
-        <div className="features">
-          <Reveal className="feature-card">
-            <div className="feature-icon"><Search size={26}/></div>
-            <span className="feature-num">01 — SEO</span>
-            <h3>{locale==='pt'?'Encontrado quando buscam.':'Found when they search.'}</h3>
-            <p>{locale==='pt'?'Base técnica, conteúdo com intenção e saúde de busca que sustentam crescimento.':'Build a reliable foundation of technical health, meaningful content and search intent.'}</p>
-            <div className="feature-bottom">Search intelligence <ArrowUpRight size={17}/></div>
-          </Reveal>
-          <Reveal className="feature-card" delay={.1}>
-            <div className="feature-icon"><Atom size={26}/></div>
-            <span className="feature-num">02 — GEO</span>
-            <h3>{locale==='pt'?'Citado quando a IA responde.':'Mentioned when AI answers.'}</h3>
-            <p>{locale==='pt'?'Como a marca aparece em ChatGPT, Gemini e superfícies generativas.':'Explore how your brand is represented across ChatGPT, Gemini and generative discovery.'}</p>
-            <div className="feature-bottom">AI visibility <ArrowUpRight size={17}/></div>
-          </Reveal>
-          <Reveal className="feature-card" delay={.2}>
-            <div className="feature-icon"><MessageSquareMore size={26}/></div>
-            <span className="feature-num">03 — AEO</span>
-            <h3>{locale==='pt'?'Claro quando perguntam.':'Clear when they ask.'}</h3>
-            <p>{locale==='pt'?'Respostas úteis e precisas, feitas primeiro para pessoas.':'Turn complex questions into precise, useful answers built for humans first.'}</p>
-            <div className="feature-bottom">Answer intelligence <ArrowUpRight size={17}/></div>
-          </Reveal>
-        </div>
-      </section>
-
-      <GrowthProjection locale={locale}/>
-
-      <section className="section wrap journal-preview">
-        <div className="split-title">
-          <Reveal>
-            <span className="eyebrow">03 / {d.featured}</span>
-            <h2>{locale==='pt'?<>Ideias que valem<br/><em>ser encontradas.</em></>:<>Ideas worth<br/><em>being found.</em></>}</h2>
-          </Reveal>
-          <Link className="outline-arrow" href={`/${locale}/artigos`}>{d.see}<ArrowUpRight size={18}/></Link>
-        </div>
-        <div className="editorial-grid">
-          {featured.map((e,i)=>(
-            <Link href={articleHref(e,locale)} className="editorial-card" key={e.slug}>
-              <div className={`editorial-art art-${i}`}>
-                <span>{e.area}</span>
-                <span className="art-shape">{['◉','✳','↗'][i]}</span>
-                <MoveUpRight size={23}/>
+          <div className="wrap hero hero-v2">
+            <div className="hero-copy">
+              <p className="hero-brand">{L.hero.brand}</p>
+              <div className="eyebrow"><span className="eyebrow-square"/>{L.hero.badge}</div>
+              <h1>{L.hero.h1}</h1>
+              <p className="hero-intro">{L.hero.sub}</p>
+              <DomainCapture locale={locale}/>
+              <div className="hero-actions">
+                <Link className="btn btn-ghost" href={`/${locale}/plataforma`}>
+                  {L.hero.secondary}<ArrowRight size={18}/>
+                </Link>
               </div>
-              <div className="editorial-meta">{e.area} / FIELD NOTE <span>08 MIN READ</span></div>
-              <h3>{e.query.replace(/\b\w/g,l=>l.toUpperCase())}</h3>
-              <p>{locale==='pt'
-                ?'Fundamentos, armadilhas comuns e perguntas práticas que valem a pena fazer.'
-                :'Understand the fundamentals, common pitfalls, and practical questions worth asking.'}</p>
-              <span className="read-link">Read the guide <ArrowUpRight size={16}/></span>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      <section className="cta-section wrap cta-punch">
-        <div className="cta-content">
-          <span className="eyebrow">{locale==='pt'?'PRÓXIMO PASSO':'NEXT STEP'}</span>
-          <h2>{d.ctaFinal}</h2>
-          <p>{locale==='pt'
-            ?'Mais gente no Google. Mais presença nas IAs. Mais oportunidades de venda — comece agora.'
-            :'More people from Google. More presence in AI answers. More sales opportunities — start now.'}</p>
-          <a
-            href={`mailto:hello@geoura.com?subject=${encodeURIComponent(locale==='pt'?'Quero mais resultado orgânico':'I want more organic results')}`}
-            className="btn btn-light btn-pulse"
-          >
-            {d.ctaFinalBtn}<ArrowUpRight size={18}/>
-          </a>
-          <div className="cta-proof-row">
-            <span>{locale==='pt'?'+ tráfego orgânico':'+ organic traffic'}</span>
-            <span>{locale==='pt'?'+ menções em IA':'+ AI mentions'}</span>
-            <span>{locale==='pt'?'+ faturamento':'+ revenue'}</span>
+              <p className="hero-trust">{L.hero.trust}</p>
+            </div>
+            <div className="hero-visual">
+              <span className="preview-chip">{L.preview.badge}</span>
+              <Graphic locale={locale}/>
+            </div>
           </div>
-        </div>
-        <div className="cta-orb"/>
-      </section>
-    </main>
-    <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(jsonLd).replace(/</g,'\\u003c')}}/>
-    <Footer locale={locale}/>
-  </>;
+        </section>
+
+        <section className="section wrap problem-section" id="problem">
+          <Reveal>
+            <div className="section-head">
+              <span className="eyebrow">{L.problem.eyebrow}</span>
+              <h2>{L.problem.title}</h2>
+              <p>{L.problem.text}</p>
+            </div>
+          </Reveal>
+          <div className="problem-grid">
+            {L.problem.cards.map((c,i)=>(
+              <Reveal key={c.title} className="problem-card" delay={i*.08}>
+                <span className="problem-num">0{i+1}</span>
+                <h3>{c.title}</h3>
+                <p>{c.text}</p>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        <section className="section wrap method" id="how">
+          <Reveal>
+            <div className="section-head">
+              <span className="eyebrow">{L.how.eyebrow}</span>
+              <h2>{L.how.title}</h2>
+              <p>{L.how.text}</p>
+            </div>
+          </Reveal>
+          <div className="how-grid">
+            {L.how.steps.map((s,i)=>(
+              <Reveal key={s.n} className="how-card" delay={i*.06}>
+                <span className="how-n">{s.n}</span>
+                <h3>{s.title}</h3>
+                <p>{s.text}</p>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        <section className="section wrap features-section" id="features">
+          <Reveal>
+            <div className="section-head">
+              <span className="eyebrow">{L.features.eyebrow}</span>
+              <h2>{L.features.title}</h2>
+              <p>{L.features.text}</p>
+            </div>
+          </Reveal>
+          <div className="features pillars">
+            {L.features.pillars.map((p,i)=>{
+              const Icon=[Search,Atom,MessageSquareMore][i];
+              return (
+                <Reveal key={p.area} className="feature-card pillar-card" delay={i*.08}>
+                  <div className="feature-icon"><Icon size={26}/></div>
+                  <span className="feature-num">{p.area}</span>
+                  <h3>{p.title}</h3>
+                  <ul className="pillar-list">
+                    {p.items.map(item=><li key={item}>{item}</li>)}
+                  </ul>
+                </Reveal>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="section wrap preview-section" id="preview">
+          <Reveal>
+            <div className="section-head">
+              <span className="eyebrow">{L.preview.eyebrow}</span>
+              <h2>{L.preview.title}</h2>
+              <p>{L.preview.text}</p>
+            </div>
+          </Reveal>
+        </section>
+
+        <GrowthProjection locale={locale} evidenceCopy={L.evidence}/>
+
+        <section className="section wrap differentiate-section" id="why">
+          <Reveal>
+            <div className="section-head">
+              <span className="eyebrow">{L.differentiate.eyebrow}</span>
+              <h2>{L.differentiate.title}</h2>
+              <p>{L.differentiate.text}</p>
+            </div>
+          </Reveal>
+          <div className="diff-grid">
+            {L.differentiate.points.map((p,i)=>(
+              <Reveal key={p.title} className="diff-card" delay={i*.08}>
+                <h3>{p.title}</h3>
+                <p>{p.text}</p>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        <FaqSection locale={locale}/>
+
+        <section className="cta-section wrap cta-punch" id="final-cta">
+          <div className="cta-content">
+            <span className="eyebrow">{locale==='pt'?'PRÓXIMO PASSO':'NEXT STEP'}</span>
+            <h2>{L.finalCta.title}</h2>
+            <p>{L.finalCta.text}</p>
+            <DomainCapture locale={locale} compact id="final-domain-capture"/>
+            <div className="hero-actions" style={{justifyContent:'center',marginTop:18}}>
+              <Link className="btn btn-ghost" href={`/${locale}/artigos`} style={{color:'#f7f5f0',borderColor:'rgba(247,245,240,.35)'}}>
+                {L.finalCta.secondary}<ArrowUpRight size={18}/>
+              </Link>
+            </div>
+          </div>
+          <div className="cta-orb"/>
+        </section>
+      </main>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(jsonLd).replace(/</g,'\\u003c')}}/>
+      <Footer locale={locale}/>
+    </>
+  );
 }

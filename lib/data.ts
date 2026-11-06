@@ -2,12 +2,13 @@ import topics from '@/topics.json';
 export type Locale='en'|'pt';
 export type Topic={area:'SEO'|'GEO'|'AEO';kind:string;cluster:string;query:string;intent:string;priority:string;slug:string};
 export const entries=topics as Topic[];
-/** Only editorially approved slugs — must match topics.json `slug` (incl. SEO-/GEO-/AEO- prefix). */
-export const publishedSlugs=new Set([
-  'SEO-search-engine-optimization',
-  'GEO-generative-engine-optimization',
-  'AEO-answer-engine-optimization'
-]);
+/**
+ * Only editorially approved, rewritten slugs. Empty by design until hub articles
+ * pass factual / originality / translation review (see docs/CONTENT_ROADMAP.md).
+ * Must match topics.json `slug` including SEO-/GEO-/AEO- prefix when populated.
+ */
+export const publishedSlugs=new Set<string>([]);
+
 export const baseUrl=process.env.NEXT_PUBLIC_SITE_URL||'https://geoura.com';
 export function articleHref(t:Topic,locale:Locale){return `/${locale}/artigos/${t.slug}`}
 export function getLanguage(v:string):Locale {return v==='pt'?'pt':'en'}

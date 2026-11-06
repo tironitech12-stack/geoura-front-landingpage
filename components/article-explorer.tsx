@@ -110,7 +110,7 @@ export default function ArticleExplorer({
             <span className={`tag tag-${t.area.toLowerCase()}`}>{t.area}</span>
             <span className="row-main">
               <strong>{t.query}</strong>
-              <small>{t.cluster} · {t.kind==='Pergunta'?'Question':'Keyword'} · Editorial draft</small>
+              <small>{t.cluster} · {t.kind==='Pergunta'?(locale==='pt'?'Pergunta':'Question'):(locale==='pt'?'Palavra-chave':'Keyword')} · {locale==='pt'?'Rascunho':'Draft'}</small>
             </span>
             <ArrowUpRight size={21}/>
           </Link>
@@ -118,15 +118,15 @@ export default function ArticleExplorer({
       </div>
       <div className="pagination">
         {safePage<=1?(
-          <button type="button" disabled><ChevronLeft size={18}/> Previous</button>
+          <button type="button" disabled><ChevronLeft size={18}/> {locale==='pt'?'Anterior':'Previous'}</button>
         ):(
-          <Link className="pagination-link" href={pageHref(safePage-1)}><ChevronLeft size={18}/> Previous</Link>
+          <Link className="pagination-link" href={pageHref(safePage-1)}><ChevronLeft size={18}/> {locale==='pt'?'Anterior':'Previous'}</Link>
         )}
         <span>{safePage} / {max}</span>
         {safePage>=max?(
-          <button type="button" disabled>Next <ChevronRight size={18}/></button>
+          <button type="button" disabled>{locale==='pt'?'Próxima':'Next'} <ChevronRight size={18}/></button>
         ):(
-          <Link className="pagination-link" href={pageHref(safePage+1)}>Next <ChevronRight size={18}/></Link>
+          <Link className="pagination-link" href={pageHref(safePage+1)}>{locale==='pt'?'Próxima':'Next'} <ChevronRight size={18}/></Link>
         )}
       </div>
     </div>

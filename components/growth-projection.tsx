@@ -5,51 +5,60 @@ import {ArrowRight,TrendingUp} from 'lucide-react';
 
 const data={
   en:{
-    eyebrow:'02 / RESULTS THAT COMPOUND',
-    title:<>From visibility to <em>revenue.</em></>,
-    text:'Organic growth is not vanity metrics. More people finding you in Google and AI answers means more demand — and more sales opportunity.',
+    title:<>From visibility to <em>demand.</em></>,
     months:[
-      {name:'Month 1 · now',clicks:'7',impr:'944',ctr:'0.7%',pos:'14.5',tone:'m1'},
+      {name:'Month 1 · baseline',clicks:'7',impr:'944',ctr:'0.7%',pos:'14.5',tone:'m1'},
       {name:'Month 2 · path',clicks:'28',impr:'3.8k',ctr:'0.9%',pos:'11.2',tone:'m2'},
-      {name:'Month 3 · target',clicks:'75',impr:'9.5k',ctr:'1.3%',pos:'8.1',tone:'m3'},
+      {name:'Month 3 · example',clicks:'75',impr:'9.5k',ctr:'1.3%',pos:'8.1',tone:'m3'},
     ],
     labels:{clicks:'Clicks',impr:'Impressions',ctr:'Avg. CTR',pos:'Avg. position'},
     lifts:[
-      {label:'Impressions',value:'+907%',hint:'944 → 9.5k'},
-      {label:'Clicks',value:'+971%',hint:'7 → 75'},
-    ],
-    disclaimer:'Illustrative 3-month projection inspired by Search Console trajectories — not a guarantee.'
+      {label:'Impressions',value:'+907%',hint:'944 → 9,500 · ((9500−944)/944)'},
+      {label:'Clicks',value:'+971%',hint:'7 → 75 · ((75−7)/7)'},
+    ]
   },
   pt:{
-    eyebrow:'02 / RESULTADOS QUE COMPÕEM',
-    title:<>Da visibilidade para a <em>receita.</em></>,
-    text:'Crescimento orgânico não é métrica de vaidade. Mais gente te encontrando no Google e nas respostas de IA significa mais demanda — e mais chance de faturar.',
+    title:<>Da visibilidade à <em>demanda.</em></>,
     months:[
-      {name:'Mês 1 · atual',clicks:'7',impr:'944',ctr:'0,7%',pos:'14,5',tone:'m1'},
-      {name:'Mês 2 · trilha',clicks:'28',impr:'3,8 mil',ctr:'0,9%',pos:'11,2',tone:'m2'},
-      {name:'Mês 3 · meta',clicks:'75',impr:'9,5 mil',ctr:'1,3%',pos:'8,1',tone:'m3'},
+      {name:'Mês 1 · base',clicks:'7',impr:'944',ctr:'0,7%',pos:'14,5',tone:'m1'},
+      {name:'Mês 2 · caminho',clicks:'28',impr:'3,8 mil',ctr:'0,9%',pos:'11,2',tone:'m2'},
+      {name:'Mês 3 · exemplo',clicks:'75',impr:'9,5 mil',ctr:'1,3%',pos:'8,1',tone:'m3'},
     ],
     labels:{clicks:'Cliques',impr:'Impressões',ctr:'CTR média',pos:'Posição média'},
     lifts:[
-      {label:'Impressões',value:'+907%',hint:'944 → 9,5 mil'},
-      {label:'Cliques',value:'+971%',hint:'7 → 75'},
-    ],
-    disclaimer:'Projeção ilustrativa de 3 meses no estilo Search Console — não é garantia de resultado.'
+      {label:'Impressões',value:'+907%',hint:'944 → 9.500 · ((9500−944)/944)'},
+      {label:'Cliques',value:'+971%',hint:'7 → 75 · ((75−7)/7)'},
+    ]
   }
 };
 
-export default function GrowthProjection({locale}:{locale:Locale}){
+type Evidence={eyebrow:string;title:string;text:string;disclaimer:string};
+
+export default function GrowthProjection({locale,evidenceCopy}:{locale:Locale;evidenceCopy?:Evidence}){
   const t=data[locale];
+  const head=evidenceCopy||{
+    eyebrow:locale==='pt'?'Cenário exemplo':'Example scenario',
+    title:'',
+    text:locale==='pt'
+      ?'Cenário ilustrativo matematicamente consistente — não é case real.'
+      :'Mathematically consistent illustrative scenario — not a customer case.',
+    disclaimer:locale==='pt'
+      ?'Exemplo ilustrativo apenas. Não são resultados verificados.'
+      :'Illustrative example only. Not verified results.'
+  };
+
   return (
-    <section className="growth-section">
+    <section className="growth-section" id="evidence" aria-label={head.eyebrow}>
       <div className="wrap">
         <Reveal>
           <div className="section-head growth-head">
-            <span className="eyebrow">{t.eyebrow}</span>
-            <h2>{t.title}</h2>
-            <p>{t.text}</p>
+            <span className="eyebrow">{head.eyebrow}</span>
+            <h2>{evidenceCopy?head.title:t.title}</h2>
+            <p>{head.text}</p>
           </div>
         </Reveal>
+
+        <p className="preview-chip inline-chip">{locale==='pt'?'Demonstrativo · não é conta real':'Demonstrative · not a live account'}</p>
 
         <div className="growth-months">
           {t.months.map((m,i)=>(
@@ -78,7 +87,7 @@ export default function GrowthProjection({locale}:{locale:Locale}){
             </Reveal>
           ))}
         </div>
-        <p className="growth-disclaimer">{t.disclaimer}</p>
+        <p className="growth-disclaimer">{head.disclaimer}</p>
       </div>
     </section>
   );

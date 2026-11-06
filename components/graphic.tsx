@@ -104,8 +104,8 @@ export default function Graphic({locale='en'}:{locale?:Locale}){
           <div className="chart-head">
             <span>{t.chartLabel}</span>
             <span className="chart-legend">
-              <i className="leg-clicks"/> Cliques
-              <i className="leg-impr"/> Impressões
+              <i className="leg-clicks"/> {locale==='pt'?'Cliques':'Clicks'}
+              <i className="leg-impr"/> {locale==='pt'?'Impressões':'Impressions'}
             </span>
           </div>
           <svg viewBox={`0 0 ${w} ${h}`} className="growth-svg" role="img" aria-hidden>

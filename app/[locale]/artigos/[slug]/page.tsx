@@ -116,7 +116,11 @@ export default async function Post({params}:{params:Promise<{locale:string,slug:
           </div>
           {!a.published&&(
             <div className="draft-warning">
-              <strong>Editorial research draft.</strong> This page is excluded from search indexing until it receives a factual, structural, translation and originality review. It is not a finished publication.
+              <strong>{locale==='pt'?'Rascunho editorial.':'Editorial research draft.'}</strong>{' '}
+              {locale==='pt'
+                ?'Esta página fica fora da indexação até revisão factual, estrutural, de tradução e originalidade. Não é uma publicação final.'
+                :'This page is excluded from search indexing until it receives a factual, structural, translation and originality review. It is not a finished publication.'}
+              {' '}({a.status})
             </div>
           )}
           <div className="post-content" dangerouslySetInnerHTML={{__html:html}}/>

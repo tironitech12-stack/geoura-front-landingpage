@@ -2,15 +2,15 @@ import type {MetadataRoute} from 'next';
 import {baseUrl,entries,publishedSlugs} from '@/lib/data';
 
 export default function sitemap():MetadataRoute.Sitemap{
-  const staticPaths=['','/artigos','/plataforma'];
+  const staticPaths=['','/artigos','/plataforma','/sobre','/privacy','/terms'];
   const urls:MetadataRoute.Sitemap=[];
 
   for(const locale of ['en','pt'] as const){
     for(const p of staticPaths){
       urls.push({
         url:`${baseUrl}/${locale}${p}`,
-        changeFrequency:'weekly',
-        priority:p?0.7:1,
+        changeFrequency:p===''?'weekly':'monthly',
+        priority:p?0.6:1,
         alternates:{
           languages:{
             en:`${baseUrl}/en${p}`,
